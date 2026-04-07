@@ -1,0 +1,1100 @@
+
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    :root {
+        --red: #E24B4A;
+        --red-light: #FCEBEB;
+        --red-dark: #A32D2D;
+        --blue: #378ADD;
+        --blue-light: #E6F1FB;
+        --blue-dark: #185FA5;
+        --green: #639922;
+        --green-light: #EAF3DE;
+        --green-dark: #3B6D11;
+        --yellow: #f7ba2a;
+        --yellow-light: #FBE8B8;
+        --yellow-dark: #9A6500;
+    }
+
+    body {
+        font-family: var(--font-sans,sans-serif);
+        background: #fff;
+    }
+
+    #app {
+        background: #fff;
+        min-height: 600px;
+    }
+
+    .top-bar {
+        background: var(--yellow);
+        padding: 10px 16px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+        .top-bar h1 {
+            font-size: 16px;
+            font-weight: 500;
+            color: #fff;
+        }
+
+    .mode-btns {
+        display: flex;
+        gap: 5px;
+        align-items: center;
+    }
+
+    .mode-btn {
+        padding: 4px 12px;
+        border-radius: 5px;
+        border: 1.5px solid rgba(255,255,255,0.7);
+        background: transparent;
+        color: #fff;
+        font-size: 12px;
+        cursor: pointer;
+        font-family: inherit;
+    }
+
+        .mode-btn.active {
+            background: #fff;
+            color: var(--yellow-dark);
+            font-weight: 500;
+        }
+
+    .sync-btn {
+        padding: 4px 10px;
+        border-radius: 5px;
+        border: 1.5px solid rgba(255,255,255,0.7);
+        background: transparent;
+        color: #fff;
+        font-size: 12px;
+        cursor: pointer;
+        font-family: inherit;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+        .sync-btn:disabled {
+            opacity: 0.6;
+            cursor: default;
+        }
+
+    .spin {
+        display: inline-block;
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    .legend {
+        display: flex;
+        gap: 14px;
+        padding: 8px 16px;
+        background: #fffdf5;
+        border-bottom: 0.5px solid #f0e8c0;
+        flex-wrap: wrap;
+    }
+
+    .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 12px;
+        color: #555;
+    }
+
+    .legend-dot {
+        width: 11px;
+        height: 11px;
+        border-radius: 3px;
+    }
+
+    .search-bar {
+        padding: 8px 16px;
+        background: #fffdf5;
+        border-bottom: 0.5px solid #f0e8c0;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+        .search-bar input {
+            flex: 1;
+            max-width: 380px;
+            padding: 6px 10px;
+            border: 0.5px solid #d0c890;
+            border-radius: 5px;
+            font-size: 13px;
+            font-family: inherit;
+            background: #fff;
+        }
+
+    .status-bar {
+        padding: 5px 16px;
+        font-size: 11px;
+        color: #888;
+        background: #fffdf5;
+        border-bottom: 0.5px solid #f0e8c0;
+        min-height: 22px;
+    }
+
+        .status-bar.err {
+            color: var(--red-dark);
+            background: var(--red-light);
+        }
+
+        .status-bar.ok {
+            color: var(--green-dark);
+            background: var(--green-light);
+        }
+
+    .view-note {
+        padding: 6px 16px;
+        background: var(--blue-light);
+        font-size: 12px;
+        color: var(--blue-dark);
+        text-align: center;
+    }
+
+    .calendar-wrapper {
+        padding: 12px 16px;
+    }
+
+    .cal-header {
+        display: grid;
+        grid-template-columns: repeat(7,1fr);
+        gap: 2px;
+        margin-bottom: 3px;
+    }
+
+    .day-name {
+        text-align: center;
+        font-size: 11px;
+        font-weight: 500;
+        color: var(--yellow-dark);
+        padding: 3px 0;
+        background: var(--yellow-light);
+        border-radius: 3px;
+    }
+
+    .cal-grid {
+        display: grid;
+        grid-template-columns: repeat(7,1fr);
+        gap: 2px;
+    }
+
+    .cal-cell {
+        background: #fafafa;
+        border: 0.5px solid #e8e0c0;
+        border-radius: 5px;
+        min-height: 80px;
+        padding: 4px;
+        position: relative;
+    }
+
+        .cal-cell.empty {
+            background: #fff;
+            border-color: #f5f0e5;
+        }
+
+        .cal-cell.today {
+            border-color: var(--yellow);
+            border-width: 1.5px;
+        }
+
+    .date-num {
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--yellow-dark);
+        margin-bottom: 2px;
+    }
+
+    .cal-cell.today .date-num {
+        background: var(--yellow);
+        color: #fff;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+    }
+
+    .exam-pill {
+        font-size: 9px;
+        padding: 2px 4px;
+        border-radius: 3px;
+        margin-bottom: 1px;
+        cursor: pointer;
+        line-height: 1.4;
+        word-break: break-word;
+    }
+
+        .exam-pill.cat-124 {
+            background: var(--red-light);
+            color: var(--red-dark);
+            border-left: 2px solid var(--red);
+        }
+
+        .exam-pill.cat-125 {
+            background: var(--blue-light);
+            color: var(--blue-dark);
+            border-left: 2px solid var(--blue);
+        }
+
+        .exam-pill.cat-gen {
+            background: var(--green-light);
+            color: var(--green-dark);
+            border-left: 2px solid var(--green);
+        }
+
+        .exam-pill.hidden-search {
+            display: none;
+        }
+
+    .cat-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 8px;
+    }
+
+        .cat-row input[type="text"] {
+            flex: 1;
+        }
+
+    .cat-color {
+        width: 38px;
+        height: 32px;
+        padding: 2px;
+        border: 0.5px solid #d0c890;
+        border-radius: 5px;
+        background: #fff;
+        cursor: pointer;
+    }
+
+    .cat-sample {
+        display: inline-block;
+        padding: 3px 8px;
+        border-radius: 4px;
+        font-size: 11px;
+        font-weight: 500;
+        min-width: 72px;
+        text-align: center;
+    }
+
+    .modal-note {
+        font-size: 11px;
+        color: #777;
+        margin-top: 8px;
+        line-height: 1.5;
+    }
+
+    .import-summary {
+        margin-top: 10px;
+        padding: 8px 10px;
+        background: #fffdf5;
+        border: 0.5px solid #e0d8b0;
+        border-radius: 5px;
+        font-size: 12px;
+        color: #666;
+        white-space: pre-line;
+        display: none;
+    }
+
+    .add-btn {
+        position: absolute;
+        bottom: 3px;
+        right: 3px;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background: var(--yellow-light);
+        border: 1px solid var(--yellow);
+        color: var(--yellow-dark);
+        font-size: 13px;
+        line-height: 14px;
+        text-align: center;
+        cursor: pointer;
+        display: none;
+        font-family: inherit;
+    }
+
+    .cal-cell:hover .add-btn {
+        display: block;
+    }
+
+    .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0,0,0,0.4);
+        z-index: 100;
+        display: none;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .overlay.show {
+            display: flex;
+        }
+
+    .modal {
+        background: #fff;
+        border-radius: 10px;
+        padding: 18px;
+        width: 360px;
+        max-width: 95vw;
+        border: 0.5px solid #e0d8b0;
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+
+        .modal h3 {
+            font-size: 15px;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 12px;
+        }
+
+        .modal label {
+            display: block;
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 2px;
+            margin-top: 9px;
+        }
+
+        .modal input, .modal select, .modal textarea {
+            width: 100%;
+            padding: 6px 9px;
+            border: 0.5px solid #d0c890;
+            border-radius: 5px;
+            font-size: 13px;
+            font-family: inherit;
+        }
+
+        .modal textarea {
+            height: 52px;
+            resize: vertical;
+        }
+
+    .modal-actions {
+        display: flex;
+        gap: 7px;
+        margin-top: 12px;
+        justify-content: flex-end;
+    }
+
+    .btn {
+        padding: 6px 14px;
+        border-radius: 5px;
+        font-size: 12px;
+        cursor: pointer;
+        font-family: inherit;
+        border: none;
+    }
+
+    .btn-primary {
+        background: var(--yellow);
+        color: #fff;
+    }
+
+    .btn-secondary {
+        background: #f5f0e0;
+        color: #666;
+        border: 0.5px solid #d0c890;
+    }
+
+    .btn-danger {
+        background: var(--red-light);
+        color: var(--red-dark);
+        border: 0.5px solid var(--red);
+    }
+
+    .share-panel {
+        padding: 8px 16px;
+        background: #f5f0e0;
+        border-bottom: 0.5px solid #e0d8b0;
+        font-size: 12px;
+        color: #666;
+        display: none;
+    }
+
+        .share-panel input {
+            width: 100%;
+            padding: 5px 8px;
+            border: 0.5px solid #d0c890;
+            border-radius: 4px;
+            font-size: 11px;
+            font-family: inherit;
+            margin-top: 4px;
+            background: #fff;
+        }
+
+    .detail-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0,0,0,0.4);
+        z-index: 200;
+        display: none;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .detail-overlay.show {
+            display: flex;
+        }
+
+    .detail-modal {
+        background: #fff;
+        border-radius: 10px;
+        padding: 18px;
+        width: 320px;
+        max-width: 95vw;
+    }
+
+        .detail-modal h4 {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 7px;
+        }
+
+    .detail-row {
+        font-size: 12px;
+        color: #555;
+        margin-bottom: 3px;
+    }
+
+    .detail-cat-badge {
+        display: inline-block;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 11px;
+        font-weight: 500;
+        margin-bottom: 6px;
+    }
+
+    .detail-actions {
+        display: flex;
+        gap: 7px;
+        margin-top: 12px;
+    }
+</style>
+
+<div id="app">
+    <div class="top-bar">
+        <h1>April 2026 — Exam Calendar</h1>
+        <div class="mode-btns" id="mode-btns">
+            <button class="mode-btn active" id="btn-admin" onclick="setMode('admin')">Admin</button>
+            <button class="mode-btn" id="btn-view" onclick="setMode('view')">View only</button>
+            <button class="mode-btn" onclick="openCategories()">Categories</button>
+            <button class="mode-btn" onclick="openImport()">Import</button>
+            <button class="mode-btn" onclick="toggleShare()">Share</button>
+            <button class="sync-btn" id="sync-btn" onclick="syncNow()" title="Sync with cloud">&#x21bb; Sync</button>
+        </div>
+    </div>
+
+    <div id="view-note" class="view-note" style="display:none;">View-only mode — your friends see the same exams in real time.</div>
+
+    <div class="legend" id="legend"></div>
+
+    <div class="search-bar">
+        <input type="text" id="search" placeholder="Search exams by name..." oninput="doSearch(this.value)">
+    </div>
+
+    <div id="status" class="status-bar">Loading exams...</div>
+
+    <div id="share-panel" class="share-panel">
+        <div>Share this link with your friends for view-only access:</div>
+        <input type="text" id="share-link-input" readonly onclick="this.select()">
+    </div>
+
+    <div class="calendar-wrapper">
+        <div class="cal-header">
+            <div class="day-name">Sun</div><div class="day-name">Mon</div><div class="day-name">Tue</div>
+            <div class="day-name">Wed</div><div class="day-name">Thu</div><div class="day-name">Fri</div><div class="day-name">Sat</div>
+        </div>
+        <div class="cal-grid" id="cal-grid"></div>
+    </div>
+</div>
+
+<div class="overlay" id="modal-overlay">
+    <div class="modal">
+        <h3 id="modal-title">Add exam</h3>
+        <label>Exam name</label>
+        <input type="text" id="f-name" placeholder="e.g. Calculus II">
+        <label>Category</label>
+        <select id="f-cat"></select>
+        <label>Date</label>
+        <input type="date" id="f-date" min="2026-04-01" max="2026-04-30">
+        <label>Session 1 time</label>
+        <input type="time" id="f-time1">
+        <label>Session 2 time (optional)</label>
+        <input type="time" id="f-time2">
+        <label>Notes (optional)</label>
+        <textarea id="f-notes" placeholder="Room, location, etc."></textarea>
+        <div class="modal-actions">
+            <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+            <button class="btn btn-primary" id="save-btn" onclick="saveExam()">Save</button>
+        </div>
+    </div>
+</div>
+
+<div class="detail-overlay" id="detail-overlay">
+    <div class="detail-modal">
+        <div id="d-badge" class="detail-cat-badge"></div>
+        <h4 id="d-name"></h4>
+        <div class="detail-row" id="d-date"></div>
+        <div class="detail-row" id="d-times"></div>
+        <div class="detail-row" id="d-notes"></div>
+        <div class="detail-actions" id="d-actions"></div>
+    </div>
+</div>
+
+
+<div class="overlay" id="categories-overlay">
+    <div class="modal">
+        <h3>Manage categories</h3>
+        <div id="categories-list"></div>
+        <label>New category name</label>
+        <input type="text" id="new-cat-name" placeholder="e.g. General exams">
+        <label>Color</label>
+        <input type="color" id="new-cat-color" class="cat-color" value="#639922">
+        <div class="modal-actions">
+            <button class="btn btn-secondary" onclick="closeCategories()">Close</button>
+            <button class="btn btn-primary" onclick="addCategory()">Add category</button>
+        </div>
+        <div class="modal-note">You can rename categories, change their colors, add new ones, or delete one after moving its exams to another category.</div>
+    </div>
+</div>
+
+<div class="overlay" id="import-overlay">
+    <div class="modal">
+        <h3>Import exams</h3>
+        <label>Default category</label>
+        <select id="import-cat"></select>
+        <label>Paste exams here</label>
+        <textarea id="import-text" style="height:180px;" placeholder="[General]&#10;ثقافة اسلامية : 4/5&#10;عربي: 5/4 الساعة 5&#10;&#10;[Cohort 124]&#10;انجليزي 101 : 4/6"></textarea>
+        <div class="modal-note">You can either choose a default category here, or write category headers in the text like [General] or [Cohort 124]. Text headers override the default category.</div>
+        <div class="modal-actions">
+            <button class="btn btn-secondary" onclick="closeImport()">Close</button>
+            <button class="btn btn-primary" id="import-btn" onclick="importExams()">Import</button>
+        </div>
+        <div id="import-summary" class="import-summary"></div>
+    </div>
+</div>
+
+<script>
+    const STORE_KEY = 'examcal_shared_v2';
+    const CATS_KEY = 'examcal_categories_v1';
+    const CLOUD_KEY = 'april2026_exams';
+    let exams = [];
+    let mode = 'admin';
+    let editingId = null;
+    let isSyncing = false;
+    let categories = [];
+
+    const defaultCategories = [
+        { id: '124', name: 'Cohort 124', color: '#E24B4A' },
+        { id: '125', name: 'Cohort 125', color: '#378ADD' },
+        { id: 'gen', name: 'General', color: '#639922' }
+    ];
+    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+    function shadeColor(hex, percent) {
+        hex = (hex || '').replace('#', '');
+        if (hex.length !== 6) return '#cccccc';
+        const num = parseInt(hex, 16);
+        const amt = Math.round(2.55 * percent);
+        const r = Math.min(255, Math.max(0, (num >> 16) + amt));
+        const g = Math.min(255, Math.max(0, ((num >> 8) & 255) + amt));
+        const b = Math.min(255, Math.max(0, (num & 255) + amt));
+        return '#' + (0x1000000 + (r << 16) + (g << 8) + b).toString(16).slice(1);
+    }
+    function safeClass(id) { return 'cat-' + String(id).replace(/[^a-z0-9_-]/gi, '-').toLowerCase(); }
+    function escapeHtml(s) { return String(s).replace(/[&<>"']/g, function (m) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]; }); }
+    function escapeAttr(s) { return escapeHtml(s); }
+    function getCategory(id) { return categories.find(function (c) { return String(c.id) === String(id); }) || null; }
+    function ensureCategories() {
+        if (!Array.isArray(categories) || !categories.length) categories = JSON.parse(JSON.stringify(defaultCategories));
+        exams.forEach(function (ex) { if (!getCategory(ex.cat)) ex.cat = categories[0] ? categories[0].id : 'gen'; });
+    }
+    function loadCategories() {
+        try { const d = localStorage.getItem(CATS_KEY); if (d) categories = JSON.parse(d); } catch (e) { categories = []; }
+        ensureCategories();
+    }
+    function saveCategories() {
+        try { localStorage.setItem(CATS_KEY, JSON.stringify(categories)); } catch (e) { }
+    }
+    function renderLegend() {
+        const legend = document.getElementById('legend');
+        if (!legend) return;
+        legend.innerHTML = '';
+        categories.forEach(function (cat) {
+            const item = document.createElement('div');
+            item.className = 'legend-item';
+            item.innerHTML = '<div class="legend-dot" style="background:' + cat.color + '"></div>' + escapeHtml(cat.name);
+            legend.appendChild(item);
+        });
+    }
+    function renderCategoryStyles() {
+        let style = document.getElementById('dynamic-cat-styles');
+        if (!style) { style = document.createElement('style'); style.id = 'dynamic-cat-styles'; document.head.appendChild(style); }
+        style.textContent = categories.map(function (cat) {
+            const cls = safeClass(cat.id);
+            const light = shadeColor(cat.color, 38);
+            const dark = shadeColor(cat.color, -28);
+            return '.exam-pill.' + cls + '{background:' + light + ';color:' + dark + ';border-left:2px solid ' + cat.color + ';}';
+        }).join('\n');
+    }
+    function populateCategorySelect() {
+        const sel = document.getElementById('f-cat');
+        if (!sel) return;
+        const current = sel.value;
+        sel.innerHTML = categories.map(function (cat) { return '<option value="' + escapeAttr(cat.id) + '">' + escapeHtml(cat.name) + '</option>'; }).join('');
+        if (categories.some(function (c) { return String(c.id) === String(current); })) { sel.value = current; }
+        else if (categories[0]) { sel.value = categories[0].id; }
+    }
+    function renderCategoriesManager() {
+        const wrap = document.getElementById('categories-list');
+        if (!wrap) return;
+        wrap.innerHTML = '';
+        categories.forEach(function (cat) {
+            const row = document.createElement('div');
+            row.className = 'cat-row';
+            const name = document.createElement('input');
+            name.type = 'text';
+            name.value = cat.name;
+            name.oninput = function () { cat.name = this.value; refreshCategoryUI(); renderCal(); };
+            const color = document.createElement('input');
+            color.type = 'color';
+            color.className = 'cat-color';
+            color.value = cat.color;
+            color.oninput = function () { cat.color = this.value; refreshCategoryUI(); renderCal(); };
+            const sample = document.createElement('span');
+            sample.className = 'cat-sample';
+            sample.textContent = 'Preview';
+            sample.style.background = shadeColor(cat.color, 38);
+            sample.style.color = shadeColor(cat.color, -28);
+            sample.style.borderLeft = '2px solid ' + cat.color;
+            row.appendChild(name);
+            row.appendChild(color);
+            row.appendChild(sample);
+            if (categories.length > 1) {
+                const del = document.createElement('button');
+                del.className = 'btn btn-danger';
+                del.textContent = 'Delete';
+                del.onclick = function () { deleteCategory(cat.id); };
+                row.appendChild(del);
+            }
+            wrap.appendChild(row);
+        });
+    }
+    function refreshCategoryUI() {
+        ensureCategories();
+        saveCategories();
+        renderLegend();
+        renderCategoryStyles();
+        populateCategorySelect();
+        renderCategoriesManager();
+    }
+    function makeCategoryId(name) {
+        let id = String(name).trim().toLowerCase().replace(/\s+/g, '-').replace(/[^\w\-\u0600-\u06FF]/g, '');
+        if (!id) id = 'cat-' + Date.now().toString(36);
+        let base = id, i = 2;
+        while (categories.some(function (c) { return String(c.id) === id; })) { id = base + '-' + i; i++; }
+        return id;
+    }
+
+    function setStatus(msg, type = '') {
+        const el = document.getElementById('status');
+        el.textContent = msg;
+        el.className = 'status-bar' + (type ? ' ' + type : '');
+    }
+
+    function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2); }
+
+    function loadLocal() {
+        try { const d = localStorage.getItem(STORE_KEY); if (d) exams = JSON.parse(d); } catch (e) { exams = []; }
+        if (!Array.isArray(exams)) exams = [];
+        ensureCategories();
+    }
+    function saveLocal() {
+        try { localStorage.setItem(STORE_KEY, JSON.stringify(exams)); } catch (e) { }
+    }
+
+    async function fetchCloudExams() {
+        const prompt = `You are a JSON database. Return ONLY the current value stored under the key "${CLOUD_KEY}". If nothing is stored yet, return: {"exams":[]}. Return raw JSON only, no explanation, no markdown.`;
+        try {
+            const r = await fetch('https://api.anthropic.com/v1/messages', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 4000, system: 'You are a stateless key-value JSON store. Always respond with raw JSON only.', messages: [{ role: 'user', content: prompt }] })
+            });
+            const d = await r.json();
+            const txt = d.content?.find(c => c.type === 'text')?.text || '';
+            const clean = txt.replace(/```json|```/g, '').trim();
+            const parsed = JSON.parse(clean);
+            return parsed.exams || [];
+        } catch (e) { return null; }
+    }
+
+    async function pushCloudExams() {
+        const data = JSON.stringify({ exams });
+        const prompt = `Store this data under key "${CLOUD_KEY}": ${data}\n\nConfirm by returning exactly: {"stored":true,"count":${exams.length}}`;
+        try {
+            const r = await fetch('https://api.anthropic.com/v1/messages', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 200, system: 'You are a data store confirmer. Respond with raw JSON only.', messages: [{ role: 'user', content: prompt }] })
+            });
+            const d = await r.json();
+            return true;
+        } catch (e) { return false; }
+    }
+
+    async function syncNow(silent = false) {
+        if (isSyncing) return;
+        isSyncing = true;
+        const btn = document.getElementById('sync-btn');
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spin">&#x21bb;</span> Syncing';
+        if (!silent) setStatus('Syncing with cloud...');
+        const cloud = await fetchCloudExams();
+        if (cloud === null) {
+            setStatus('Sync failed — showing local data', 'err');
+        } else {
+            if (cloud.length > 0 || exams.length === 0) {
+                exams = cloud;
+                ensureCategories();
+                saveLocal();
+            }
+            refreshCategoryUI();
+            setStatus('Synced — ' + exams.length + ' exam(s) loaded', 'ok');
+            renderCal();
+        }
+        btn.disabled = false;
+        btn.innerHTML = '&#x21bb; Sync';
+        isSyncing = false;
+    }
+
+    function setMode(m) {
+        mode = m;
+        document.getElementById('btn-admin').classList.toggle('active', m === 'admin');
+        document.getElementById('btn-view').classList.toggle('active', m === 'view');
+        document.getElementById('view-note').style.display = m === 'view' ? 'block' : 'none';
+        renderCal();
+    }
+
+    function toggleShare() {
+        const p = document.getElementById('share-panel');
+        const visible = p.style.display === 'block';
+        p.style.display = visible ? 'none' : 'block';
+        if (!visible) {
+            const base = window.location.href.split('?')[0];
+            document.getElementById('share-link-input').value = base + '?view=true';
+        }
+    }
+
+    function checkViewParam() {
+        try {
+            const p = new URLSearchParams(window.location.search);
+            if (p.get('view') === 'true') {
+                setMode('view');
+                document.getElementById('mode-btns').style.display = 'none';
+            }
+        } catch (e) { }
+    }
+
+    function fmtTime(t) { if (!t) return ''; const [h, m] = t.split(':'); const hh = parseInt(h); return (hh % 12 || 12) + ':' + m + (hh < 12 ? 'am' : 'pm'); }
+    function fmtDate(d) { const dt = new Date(d + 'T00:00:00'); return dt.getDate() + ' ' + months[dt.getMonth()] + ' ' + dt.getFullYear(); }
+
+    function renderCal() {
+        const grid = document.getElementById('cal-grid');
+        grid.innerHTML = '';
+        const firstDay = new Date(2026, 3, 1).getDay();
+        for (let i = 0; i < firstDay; i++) { const c = document.createElement('div'); c.className = 'cal-cell empty'; grid.appendChild(c); }
+        const today = new Date();
+        for (let d = 1; d <= 30; d++) {
+            const cell = document.createElement('div'); cell.className = 'cal-cell';
+            const isToday = today.getFullYear() === 2026 && today.getMonth() === 3 && today.getDate() === d;
+            if (isToday) cell.classList.add('today');
+            const dateStr = '2026-04-' + String(d).padStart(2, '0');
+            const numEl = document.createElement('div'); numEl.className = 'date-num';
+            if (isToday) { numEl.style.cssText = 'width:20px;height:20px;border-radius:50%;background:var(--yellow);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;'; }
+            numEl.textContent = d; cell.appendChild(numEl);
+            const dayExams = exams.filter(e => e.date === dateStr).sort((a, b) => (a.time1 || '').localeCompare(b.time1 || ''));
+            dayExams.forEach(ex => {
+                const pill = document.createElement('div');
+                pill.className = 'exam-pill ' + safeClass(ex.cat);
+                pill.dataset.id = ex.id;
+                let txt = ex.name;
+                if (ex.time1) txt += ' ' + fmtTime(ex.time1);
+                if (ex.time2) txt += '/' + fmtTime(ex.time2);
+                pill.textContent = txt;
+                pill.onclick = () => showDetail(ex.id);
+                cell.appendChild(pill);
+            });
+            if (mode === 'admin') {
+                const add = document.createElement('div'); add.className = 'add-btn'; add.textContent = '+';
+                add.onclick = (e) => { e.stopPropagation(); openModal(null, dateStr); };
+                cell.appendChild(add);
+            }
+            grid.appendChild(cell);
+        }
+        doSearch(document.getElementById('search').value);
+    }
+
+    function openModal(id, date) {
+        editingId = id;
+        const ex = id ? exams.find(e => e.id === id) : null;
+        document.getElementById('modal-title').textContent = id ? 'Edit exam' : 'Add exam';
+        document.getElementById('f-name').value = ex ? ex.name : '';
+        populateCategorySelect();
+        document.getElementById('f-cat').value = ex && getCategory(ex.cat) ? ex.cat : (categories[0] ? categories[0].id : '');
+        document.getElementById('f-date').value = ex ? ex.date : (date || '');
+        document.getElementById('f-time1').value = ex ? ex.time1 : '';
+        document.getElementById('f-time2').value = ex ? ex.time2 : '';
+        document.getElementById('f-notes').value = ex ? ex.notes : '';
+        document.getElementById('modal-overlay').classList.add('show');
+        setTimeout(() => document.getElementById('f-name').focus(), 50);
+    }
+    function closeModal() { document.getElementById('modal-overlay').classList.remove('show'); editingId = null; }
+
+    async function saveExam() {
+        const name = document.getElementById('f-name').value.trim();
+        const cat = document.getElementById('f-cat').value;
+        const date = document.getElementById('f-date').value;
+        const time1 = document.getElementById('f-time1').value;
+        const time2 = document.getElementById('f-time2').value;
+        const notes = document.getElementById('f-notes').value.trim();
+        if (!name) { alert('Please enter an exam name.'); return; }
+        if (!date) { alert('Please select a date.'); return; }
+        const btn = document.getElementById('save-btn');
+        btn.disabled = true; btn.textContent = 'Saving...';
+        if (editingId) {
+            const ex = exams.find(e => e.id === editingId);
+            if (ex) Object.assign(ex, { name, cat, date, time1, time2, notes });
+        } else {
+            exams.push({ id: uid(), name, cat, date, time1, time2, notes });
+        }
+        saveLocal();
+        const ok = await pushCloudExams();
+        btn.disabled = false; btn.textContent = 'Save';
+        closeModal(); renderCal();
+        setStatus(ok ? 'Saved and synced to cloud — ' + exams.length + ' exam(s)' : 'Saved locally (cloud sync failed)', 'ok');
+    }
+
+    function showDetail(id) {
+        const ex = exams.find(e => e.id === id); if (!ex) return;
+        const badge = document.getElementById('d-badge');
+        const cat = getCategory(ex.cat) || categories[0];
+        const c = { bg: shadeColor(cat ? cat.color : '#cccccc', 38), color: shadeColor(cat ? cat.color : '#cccccc', -28) };
+        badge.style.background = c.bg; badge.style.color = c.color;
+        badge.textContent = cat ? cat.name : String(ex.cat);
+        document.getElementById('d-name').textContent = ex.name;
+        document.getElementById('d-date').textContent = 'Date: ' + fmtDate(ex.date);
+        let times = '';
+        if (ex.time1) times = 'Session 1: ' + fmtTime(ex.time1);
+        if (ex.time2) times += (times ? ' | ' : '') + 'Session 2: ' + fmtTime(ex.time2);
+        document.getElementById('d-times').textContent = times || 'No time specified';
+        document.getElementById('d-notes').textContent = ex.notes ? 'Notes: ' + ex.notes : '';
+        const actions = document.getElementById('d-actions'); actions.innerHTML = '';
+        if (mode === 'admin') {
+            const eb = document.createElement('button'); eb.className = 'btn btn-primary'; eb.textContent = 'Edit';
+            eb.onclick = () => { closeDetail(); openModal(id); };
+            const db = document.createElement('button'); db.className = 'btn btn-danger'; db.textContent = 'Delete';
+            db.onclick = async () => {
+                if (!confirm('Delete "' + ex.name + '"?')) return;
+                exams = exams.filter(e => e.id !== id);
+                saveLocal(); await pushCloudExams();
+                closeDetail(); renderCal();
+                setStatus('Deleted and synced', 'ok');
+            };
+            actions.appendChild(eb); actions.appendChild(db);
+        }
+        const cb = document.createElement('button'); cb.className = 'btn btn-secondary'; cb.textContent = 'Close';
+        cb.onclick = closeDetail; actions.appendChild(cb);
+        document.getElementById('detail-overlay').classList.add('show');
+    }
+    function closeDetail() { document.getElementById('detail-overlay').classList.remove('show'); }
+
+
+    function openCategories() {
+        renderCategoriesManager();
+        document.getElementById('categories-overlay').classList.add('show');
+    }
+    function closeCategories() { document.getElementById('categories-overlay').classList.remove('show'); }
+    function addCategory() {
+        const name = document.getElementById('new-cat-name').value.trim();
+        const color = document.getElementById('new-cat-color').value || '#639922';
+        if (!name) { alert('Please enter a category name.'); return; }
+        categories.push({ id: makeCategoryId(name), name: name, color: color });
+        document.getElementById('new-cat-name').value = '';
+        refreshCategoryUI();
+        renderCal();
+    }
+    function deleteCategory(catId) {
+        const used = exams.filter(function (e) { return String(e.cat) === String(catId); });
+        const others = categories.filter(function (c) { return String(c.id) !== String(catId); });
+        if (!others.length) { alert('You need at least one category.'); return; }
+        if (used.length) {
+            const options = others.map(function (c, i) { return (i + 1) + '. ' + c.name; }).join('\n');
+            const pick = prompt('This category has ' + used.length + ' exam(s). Move them to:\n\n' + options);
+            if (pick === null) return;
+            const idx = parseInt(pick, 10) - 1;
+            if (idx < 0 || idx >= others.length) { alert('Invalid choice.'); return; }
+            used.forEach(function (ex) { ex.cat = others[idx].id; });
+        }
+        categories = categories.filter(function (c) { return String(c.id) !== String(catId); });
+        refreshCategoryUI();
+        saveLocal();
+        renderCal();
+    }
+    function openImport() {
+        updateImportCategorySelect();
+        document.getElementById('import-summary').style.display = 'none';
+        document.getElementById('import-summary').textContent = '';
+        document.getElementById('import-overlay').classList.add('show');
+        setTimeout(function () { document.getElementById('import-text').focus(); }, 50);
+    }
+    function closeImport() { document.getElementById('import-overlay').classList.remove('show'); }
+    function updateImportCategorySelect() {
+        const sel = document.getElementById('import-cat');
+        if (!sel) return;
+        const current = sel.value;
+        sel.innerHTML = categories.map(function (cat) { return '<option value="' + escapeAttr(cat.id) + '">' + escapeHtml(cat.name) + '</option>'; }).join('');
+        if (categories.some(function (cat) { return String(cat.id) === String(current); })) { sel.value = current; }
+        else if (categories[0]) { sel.value = categories[0].id; }
+    }
+    function findCategoryIdByName(name) {
+        const target = String(name || '').trim().toLowerCase();
+        const found = categories.find(function (cat) { return String(cat.name || '').trim().toLowerCase() === target; });
+        return found ? found.id : '';
+    }
+    function parseImportDate(line) {
+        const m = line.match(/(\d{1,2})\s*[\/\-]\s*(\d{1,2})/);
+        if (!m) return '';
+        const a = parseInt(m[1], 10), b = parseInt(m[2], 10);
+        let day = '';
+        if (a === 4 && b >= 1 && b <= 30) day = b;
+        else if (b === 4 && a >= 1 && a <= 30) day = a;
+        else if (a >= 1 && a <= 30 && b >= 1 && b <= 30) day = a;
+        if (!day) return '';
+        return '2026-04-' + String(day).padStart(2, '0');
+    }
+    function parseImportTime(line) {
+        const hourAfterWord = line.match(/الساعة\s*(\d{1,2})(?:\s*[:.]\s*(\d{2}))?\s*(مساء|pm|صباح|am)?/i);
+        const colonTime = line.match(/\b(\d{1,2})\s*[:.]\s*(\d{2})\s*(مساء|pm|صباح|am)?/i);
+        const plainHour = line.match(/الساعة\s*(\d{1,2})\b/i);
+        let m = hourAfterWord || colonTime || plainHour;
+        if (!m) return '';
+        let h = parseInt(m[1], 10);
+        let min = m[2] || '00';
+        const mer = (m[3] || '').toLowerCase();
+        if (h > 23) return '';
+        if (mer === 'pm' || mer === 'مساء') { if (h < 12) h += 12; }
+        else if (mer === 'am' || mer === 'صباح') { if (h === 12) h = 0; }
+        else if (h >= 1 && h <= 11) h += 12;
+        return String(h).padStart(2, '0') + ':' + String(min).padStart(2, '0');
+    }
+    function parseImportLine(line, currentCat) {
+        let clean = line.trim();
+        if (!clean) return null;
+        const catHeader = clean.match(/^\[(.+)\]$/);
+        if (catHeader) return { header: true, headerName: catHeader[1].trim() };
+        const date = parseImportDate(clean);
+        if (!date) return { invalid: true };
+        const time = parseImportTime(clean);
+        clean = clean.replace(/(\d{1,2})\s*[\/\-]\s*(\d{1,2})/, ' ');
+        clean = clean.replace(/الساعة\s*\d{1,2}(?:\s*[:.]\s*\d{2})?(?:\s*(?:مساء|pm|صباح|am))?/i, ' ');
+        clean = clean.replace(/\b\d{1,2}\s*[:.]\s*\d{2}\s*(?:مساء|pm|صباح|am)?/i, ' ');
+        clean = clean.replace(/[\s:：\-]+$/, '').trim();
+        if (!clean) return { invalid: true };
+        return { name: clean, date: date, time1: time, time2: '', notes: '', cat: currentCat || (categories[0] ? categories[0].id : '') };
+    }
+    function isExactDuplicate(item) {
+        return exams.some(function (ex) {
+            return String(ex.name).trim() === String(item.name).trim() &&
+                String(ex.date || '') === String(item.date || '') &&
+                String(ex.time1 || '') === String(item.time1 || '') &&
+                String(ex.time2 || '') === String(item.time2 || '');
+        });
+    }
+    async function importExams() {
+        const txt = document.getElementById('import-text').value || '';
+        const lines = txt.split(/\r?\n/);
+        let added = 0, duplicates = 0, invalid = 0;
+        let currentCat = document.getElementById('import-cat').value || (categories[0] ? categories[0].id : '');
+        const btn = document.getElementById('import-btn');
+        btn.disabled = true; btn.textContent = 'Importing...';
+        lines.forEach(function (line) {
+            const item = parseImportLine(line, currentCat);
+            if (!item) return;
+            if (item.header) {
+                const headerCat = findCategoryIdByName(item.headerName);
+                if (headerCat) currentCat = headerCat;
+                else invalid++;
+                return;
+            }
+            if (item.invalid) { invalid++; return; }
+            if (!getCategory(item.cat)) { item.cat = currentCat || (categories[0] ? categories[0].id : ''); }
+            if (isExactDuplicate(item)) { duplicates++; return; }
+            exams.push({ id: uid(), name: item.name, cat: item.cat, date: item.date, time1: item.time1, time2: item.time2, notes: item.notes });
+            added++;
+        });
+        saveLocal();
+        const ok = await pushCloudExams();
+        btn.disabled = false; btn.textContent = 'Import';
+        refreshCategoryUI();
+        renderCal();
+        const summary = 'Added: ' + added + ' exam(s)\nSkipped duplicates: ' + duplicates + '\nSkipped invalid: ' + invalid;
+        const box = document.getElementById('import-summary');
+        box.textContent = summary;
+        box.style.display = 'block';
+        setStatus(ok ? 'Import completed — ' + added + ' added' : 'Import saved locally (cloud sync failed)', 'ok');
+    }
+
+    document.getElementById('modal-overlay').addEventListener('click', function (e) { if (e.target === this) closeModal(); });
+    document.getElementById('detail-overlay').addEventListener('click', function (e) { if (e.target === this) closeDetail(); });
+    document.getElementById('categories-overlay').addEventListener('click', function (e) { if (e.target === this) closeCategories(); });
+    document.getElementById('import-overlay').addEventListener('click', function (e) { if (e.target === this) closeImport(); });
+
+    function doSearch(q) {
+        q = q.trim().toLowerCase();
+        document.querySelectorAll('.exam-pill').forEach(pill => {
+            if (!q) { pill.classList.remove('hidden-search'); return; }
+            const ex = exams.find(e => e.id === pill.dataset.id);
+            pill.classList.toggle('hidden-search', !ex || !ex.name.toLowerCase().includes(q));
+        });
+    }
+
+    loadCategories();
+    loadLocal();
+    refreshCategoryUI();
+    renderCal();
+    checkViewParam();
+    syncNow();
+    setInterval(() => syncNow(true), 30000);
+</script>
